@@ -8,19 +8,13 @@ import {
   createHashRouter,
 } from "react-router-dom";
 import TimeCard from "./routes/TimeCard";
-import { basename } from "path";
 
-const router = createHashRouter(
-  [
-    {
-      path: "/",
-      element: <TimeCard />,
-    },
-  ],
+const router = createHashRouter([
   {
-    basename: "/working-hour-system-fe",
-  }
-);
+    path: "/",
+    element: <TimeCard />,
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
