@@ -133,7 +133,7 @@ dist
 .idea/
 .vscode/
 node_modules/
-build/
+# build/
 .DS_Store
 *.tgz
 my-app*
