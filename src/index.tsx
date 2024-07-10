@@ -2,14 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import {
-  createBrowserRouter,
-  createHashRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import TimeCard from "./routes/TimeCard";
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <div>Welcome to working hour system</div>,
