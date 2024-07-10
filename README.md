@@ -5,6 +5,9 @@ npx version: 10.2.3
 
 ## How to deploy single page app to github page with client side routing
 
+> [!WARNING]  
+> We can only use root url now
+
 Add basename (your github repo name) to router.
 
 ```typescript

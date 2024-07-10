@@ -9,10 +9,6 @@ const router = createBrowserRouter(
   [
     {
       path: "/",
-      element: <h1>Hello working hour system</h1>,
-    },
-    {
-      path: "/timecard",
       element: <TimeCard />,
     },
   ],
