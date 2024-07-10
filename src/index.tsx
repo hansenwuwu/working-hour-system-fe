@@ -11,6 +11,10 @@ const router = createBrowserRouter(
       path: "/",
       element: <TimeCard />,
     },
+    {
+      path: "/timecard",
+      element: <h1>Test timecard page</h1>,
+    },
   ],
   { basename: "/working-hour-system-fe" }
 );
