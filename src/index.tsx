@@ -2,27 +2,29 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-// import {
-//   createBrowserRouter,
-//   RouterProvider,
-//   createHashRouter,
-// } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createHashRouter,
+} from "react-router-dom";
 import TimeCard from "./routes/TimeCard";
 
-// const router = createHashRouter([
-//   {
-//     path: "/",
-//     element: <TimeCard />,
-//   },
-// ]);
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <TimeCard />,
+    },
+  ],
+  { basename: "/working-hour-system-fe" }
+);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    {/* <RouterProvider router={router} /> */}
-    <TimeCard />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
