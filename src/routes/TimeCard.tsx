@@ -21,15 +21,26 @@ enum RecorderState {
   Result = "result",
 }
 
-const RenderTasks = (
-  projectData: ProjectData,
-  setSelectedItem: CallableFunction
-) => {
-  const itemSet = new Set<string>();
-  projectData.tasks.forEach((task) => {
-    itemSet.add(task.item);
-  });
-  const uniqueItems = Array.from(itemSet);
+function RenderTasks(props: {
+  projectData: ProjectData;
+  setSelectedItem: CallableFunction;
+  cardType: string | undefined;
+}) {
+  const [uniqueItems, setUniqueItems] = useState<TaskData[]>([]);
+
+  useEffect(() => {
+    if (props.cardType == "Project") {
+      setUniqueItems(props.projectData.tasks);
+    } else if (props.cardType == "Department") {
+      setUniqueItems(
+        Array.from(
+          props.projectData.tasks
+            .reduce((map, obj) => map.set(obj.item, obj), new Map())
+            .values()
+        )
+      );
+    }
+  }, []);
 
   return (
     <>
@@ -43,23 +54,24 @@ const RenderTasks = (
           marginTop: "10px",
         }}
       >
-        {uniqueItems.map((item) => {
+        {uniqueItems.map((task) => {
           return (
             <Button
               className="btn"
-              key={item}
+              key={task.item}
               onClick={() => {
-                setSelectedItem(item);
+                props.setSelectedItem(task);
               }}
             >
-              {item}
+              {props.cardType == "Project" && task.item + " - " + task.task}
+              {props.cardType == "Department" && task.item}
             </Button>
           );
         })}
       </div>
     </>
   );
-};
+}
 
 function RecorderStarter(props: {
   setState: CallableFunction;
@@ -189,8 +201,11 @@ function RecorderTimer(props: {
             }}
             onClick={() => {
               const now = new Date();
-              const diff = now.getTime() - props.startTime.getTime();
-              props.setDuration(diff / 1000);
+              let seconds = now.getTime() - props.startTime.getTime();
+              seconds = seconds / 1000;
+              console.log("Actual seconds = ", seconds);
+              const hours = Math.ceil((seconds / 3600) * 10) / 10;
+              props.setDuration(hours);
               props.setState(RecorderState.Confirm);
             }}
           />
@@ -211,6 +226,7 @@ function RecorderConfirm(props: {
   task: TaskData;
   projectData: ProjectData;
   setHasError: CallableFunction;
+  setIsLoading: CallableFunction;
 }) {
   return (
     <>
@@ -289,19 +305,24 @@ function RecorderConfirm(props: {
                 props.setHasError(true);
                 return;
               }
+              props.setIsLoading(true);
               uploadWorkingHours(
                 props.id,
                 props.user,
                 props.projectData.project,
                 props.task.type,
                 props.task.item,
-                props.duration
+                props.duration,
+                props.task.task
               )
                 .then(() => {
                   props.setState(RecorderState.Starter);
                 })
                 .catch((error: any) => {
                   console.error("Failed to fetch data:", error);
+                })
+                .finally(() => {
+                  props.setIsLoading(false);
                 });
             }}
           >
@@ -383,29 +404,21 @@ function RecorderEditor(props: {
 
 function Recorder(props: {
   projectData: ProjectData;
-  selectedItem: string;
+  selectedItem: TaskData;
   setSelectedItem: CallableFunction;
   id: string | null;
   user: string | null;
   setHasError: CallableFunction;
+  setIsLoading: CallableFunction;
+  cardType: string | undefined;
 }) {
-  const [task, setTask] = useState<TaskData>();
   const [state, setState] = useState<RecorderState>(RecorderState.Starter);
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [duration, setDuration] = useState<number>(0);
 
-  useEffect(() => {
-    if (props.projectData) {
-      const foundTask = props.projectData.tasks.find(
-        (task) => task.item === props.selectedItem
-      );
-      if (foundTask) setTask(foundTask);
-    }
-  }, [props.projectData]);
-
   return (
     <>
-      {task && (
+      {props.selectedItem && (
         <div
           style={{
             display: "flex",
@@ -417,7 +430,7 @@ function Recorder(props: {
         >
           <h3>Deadline</h3>
           <h2 style={{ color: "#DC3545", fontWeight: "800" }}>
-            {moment(task.end_date).format("YYYY/MM/DD")}
+            {moment(props.selectedItem.end_date).format("YYYY/MM/DD")}
           </h2>
           <div
             style={{
@@ -431,7 +444,11 @@ function Recorder(props: {
               borderRadius: "20px",
             }}
           >
-            <h3 style={{ color: "#FFFFFF", margin: 0 }}>{task.item}</h3>
+            <h3 style={{ color: "#FFFFFF", margin: 0 }}>
+              {props.cardType == "Project" &&
+                props.selectedItem.item + " - " + props.selectedItem.task}
+              {props.cardType == "Department" && props.selectedItem.item}
+            </h3>
           </div>
           {state == RecorderState.Starter && (
             <RecorderStarter
@@ -455,9 +472,10 @@ function Recorder(props: {
               setState={setState}
               id={props.id}
               user={props.user}
-              task={task}
+              task={props.selectedItem}
               projectData={props.projectData}
               setHasError={props.setHasError}
+              setIsLoading={props.setIsLoading}
             />
           )}
           {state == RecorderState.Editor && (
@@ -494,23 +512,15 @@ function MainBody(props: {
   user: string | null;
   projectData: ProjectData | undefined;
   milestone: string | null;
-  selectedItem: string | undefined;
+  selectedItem: TaskData | undefined;
   setSelectedItem: CallableFunction;
   id: string | null;
   setHasError: CallableFunction;
   members: MemberData[];
+  member: MemberData | undefined;
+  setIsLoading: CallableFunction;
+  cardType: string | undefined;
 }) {
-  const [member, setMember] = useState<MemberData>();
-
-  useEffect(() => {
-    const foundMember = props.members.find(
-      (member) => member.jobNumber === props.user
-    );
-    if (foundMember) {
-      setMember(foundMember);
-    }
-  }, [props.members]);
-
   return (
     <div
       style={{
@@ -518,10 +528,10 @@ function MainBody(props: {
         marginRight: "30px",
       }}
     >
-      {member && (
+      {props.member && (
         <div className="tc_avatar_container">
           <Avatar size={64} icon={<UserOutlined />} />
-          <h3>{member.englishName}</h3>
+          <h3>{props.member.englishName}</h3>
         </div>
       )}
       {props.projectData?.project && (
@@ -550,7 +560,11 @@ function MainBody(props: {
           >
             <h3 style={{ fontWeight: "400" }}>Choose your task</h3>
           </div>
-          {RenderTasks(props.projectData, props.setSelectedItem)}
+          <RenderTasks
+            projectData={props.projectData}
+            setSelectedItem={props.setSelectedItem}
+            cardType={props.cardType}
+          />
         </>
       )}
       {props.projectData && props.selectedItem && (
@@ -561,6 +575,8 @@ function MainBody(props: {
           id={props.id}
           user={props.user}
           setHasError={props.setHasError}
+          setIsLoading={props.setIsLoading}
+          cardType={props.cardType}
         />
       )}
     </div>
@@ -586,16 +602,19 @@ function Loading() {
 
 function TimeCard() {
   const [searchParams, setSearchParams] = useSearchParams();
+
   const user = searchParams.get("user");
   const id = searchParams.get("id");
+  const milestone = searchParams.get("milestone");
 
   const [projectData, setProjectData] = useState<ProjectData>();
   const [members, setMembers] = useState<MemberData[]>([]);
-  const [milestone, setMilestone] = useState<string | null>(
-    searchParams.get("milestone")
-  );
 
-  const [selectedItem, setSelectedItem] = useState<string>();
+  const [member, setMember] = useState<MemberData>();
+
+  const [cardType, setCardType] = useState<string>("");
+
+  const [selectedItem, setSelectedItem] = useState<TaskData>();
 
   const [hasError, setHasError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -606,12 +625,35 @@ function TimeCard() {
       return;
     }
 
+    // Check if dep card needs milestone
+    if (milestone == undefined) {
+      setHasError(true);
+      return;
+    }
+
     getMembers(id)
       .then((data: MemberData[]) => {
+        const foundMember = data.find((data) => data.jobNumber === user);
+        if (foundMember === undefined) {
+          setHasError(true);
+          return;
+        }
+
         setMembers(data);
+        setMember(foundMember);
+
         getTasks(id)
           .then((data: ProjectData) => {
+            // filter task with Status, Deliverable, Task member
+            data.tasks = data.tasks.filter(
+              (task) =>
+                task.type == milestone &&
+                task.member == foundMember.englishName &&
+                task.status == "On-going"
+            );
+
             setProjectData(data);
+            setCardType(data.cardType);
           })
           .catch((error: any) => {
             setHasError(true);
@@ -625,18 +667,9 @@ function TimeCard() {
   }, []);
 
   useEffect(() => {
-    console.log("projectData: ", projectData);
-    if (projectData) {
-      if (projectData.tasks.length > 0) {
-        // Project card only has one milestone right now
-        setMilestone(projectData.tasks[0].type);
-      }
-    }
-  }, [projectData]);
-
-  useEffect(() => {
-    console.log("members: ", members);
-  }, [members]);
+    // console.log("projectData: ", projectData);
+    // console.log("members: ", members);
+  }, [members, projectData]);
 
   useEffect(() => {
     if (projectData && members) {
@@ -665,6 +698,9 @@ function TimeCard() {
             id={id}
             setHasError={setHasError}
             members={members}
+            member={member}
+            setIsLoading={setIsLoading}
+            cardType={cardType}
           />
         )}
       </div>

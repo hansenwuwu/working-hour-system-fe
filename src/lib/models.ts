@@ -1,9 +1,11 @@
 export class ProjectData {
   project: string;
+  cardType: string;
   tasks: TaskData[];
 
-  constructor(data: { project: string; tasks: any[] }) {
+  constructor(data: { project: string; cardType: string; tasks: any[] }) {
     this.project = data.project;
+    this.cardType = data.cardType;
     this.tasks = data.tasks.map((task) => new TaskData(task));
   }
 }

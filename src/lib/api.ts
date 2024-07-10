@@ -3,7 +3,7 @@ import { ProjectData, MemberData } from "./models";
 
 export const getTasks = (sheetId: string) => {
   return new Promise<ProjectData>((resolve, reject) => {
-    const scriptUrl = `https://script.google.com/macros/s/AKfycbzX1e8k3Rssd0rg37ygdYOGMuMq158QBi9KEIDg3TmtJRyYrmKD8QUV2zte6HgjjD7tYg/exec?sheetId=${sheetId}`;
+    const scriptUrl = `https://script.google.com/macros/s/AKfycbx7-Jss8FzhGWP2h9Lbs7O6rqIaCRAKiaTXmhXqwAH7DIq-8HFc6f95Q6ZhW8LKpA9kLw/exec?sheetId=${sheetId}`;
 
     axios
       .get(scriptUrl)
@@ -48,10 +48,11 @@ export const uploadWorkingHours = (
   project: string,
   milestone: string,
   item: string,
-  duration: number
+  duration: number,
+  task: string
 ) => {
   return new Promise((resolve, reject) => {
-    const scriptUrl = `https://script.google.com/macros/s/AKfycbwHeWhpKTB5aYgngnxyNudsAld2uobn2SmJZrSR96JNdRmAH-nQIEa4LUxNseaTLSQeZg/exec?sheetId=${sheetId}&userId=${userId}&project=${project}&milestone=${milestone}&item=${item}&duration=${duration}`;
+    const scriptUrl = `https://script.google.com/macros/s/AKfycbyozzEznU6gbq5mX6qyQoTf9G-xPD0eczTmW1gNnUKDg9bkm3X8qUX2qcnPew1mlQeuKA/exec?sheetId=${sheetId}&userId=${userId}&project=${project}&milestone=${milestone}&item=${item}&duration=${duration}&task=${task}`;
     axios
       .get(scriptUrl)
       .then(() => {
