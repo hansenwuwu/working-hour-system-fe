@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Avatar, Button, Input, Result, Spin } from "antd";
-import { getTasks, getMembers, uploadWorkingHours } from "../../lib/api";
-import { ProjectData, MemberData, TaskData } from "../../lib/models";
+import React from "react";
+import { Button, Input } from "antd";
+import { getTasks, getMembers } from "../../lib/api";
 import { PageType } from "./model";
 
 export function StarterPage(props: {

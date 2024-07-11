@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Button, Select } from "antd";
 import { ProjectData, MemberData } from "../../lib/models";
 import { addQueryParamsToUrl } from "./model";
+import { QRCodeCanvas } from "qrcode.react";
 
 export function GeneratorPage(props: {
   sheetId: string;
@@ -20,6 +21,10 @@ export function GeneratorPage(props: {
 
   const [userOptions, setUserOptions] = useState<any[]>([]);
   const [milestoneOptions, setMilestoneOptions] = useState<any[]>([]);
+
+  const [url, setUrl] = useState<string>("");
+
+  const qrRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setUserOptions(
@@ -78,6 +83,18 @@ export function GeneratorPage(props: {
     setMilestone(value);
   };
 
+  const handleDownload = () => {
+    if (qrRef.current) {
+      const canvas = qrRef.current.querySelector("canvas");
+      if (canvas) {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "qrcode.png";
+        link.click();
+      }
+    }
+  };
+
   return (
     <div
       style={{
@@ -128,6 +145,7 @@ export function GeneratorPage(props: {
               milestone: milestone,
             };
             const updatedUrl = addQueryParamsToUrl(url, queryParams);
+            setUrl(updatedUrl);
 
             console.log("Create card for sheetId: ", props.sheetId);
             console.log("Create card for user: ", user);
@@ -137,6 +155,39 @@ export function GeneratorPage(props: {
         >
           Generate
         </Button>
+        {url !== "" && (
+          <div
+            style={{
+              marginTop: "50px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {/* See example: https://zpao.github.io/qrcode.react/ */}
+            <div ref={qrRef}>
+              <QRCodeCanvas
+                value={url}
+                includeMargin={true}
+                size={300}
+                fgColor="#1a4499"
+              />
+            </div>
+            <Button
+              style={{
+                marginTop: "20px",
+                width: "200px",
+                height: "60px",
+                fontSize: "30px",
+              }}
+              type="primary"
+              onClick={handleDownload}
+            >
+              Download
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
