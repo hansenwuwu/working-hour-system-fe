@@ -4,6 +4,7 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import TimeCard from "./routes/TimeCard";
+import CardGenerator from "./routes/CardGenerator";
 
 const router = createBrowserRouter(
   [
@@ -11,7 +12,11 @@ const router = createBrowserRouter(
       path: "/",
       element: <TimeCard />,
     },
-  ],
+    {
+      path: "/cg",
+      element: <CardGenerator />,
+    },
+  ]
   { basename: "/working-hour-system-fe" }
 );
 

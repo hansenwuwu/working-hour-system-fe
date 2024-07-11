@@ -11,6 +11,7 @@ import {
   PlayCircleOutlined,
   LogoutOutlined,
   LoadingOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 
 enum RecorderState {
@@ -54,11 +55,11 @@ function RenderTasks(props: {
           marginTop: "10px",
         }}
       >
-        {uniqueItems.map((task) => {
+        {uniqueItems.map((task, index) => {
           return (
             <Button
               className="btn"
-              key={task.item}
+              key={index}
               onClick={() => {
                 props.setSelectedItem(task);
               }}
@@ -442,11 +443,20 @@ function Recorder(props: {
               justifyContent: "center",
               backgroundColor: "#1a4499",
               marginTop: "10px",
-              height: "40px",
+              // height: "40px",
               borderRadius: "20px",
             }}
           >
-            <h3 style={{ color: "#FFFFFF", margin: 0 }}>
+            <h3
+              style={{
+                color: "#FFFFFF",
+                margin: 0,
+                marginLeft: "20px",
+                marginRight: "20px",
+                marginTop: "10px",
+                marginBottom: "10px",
+              }}
+            >
               {props.cardType === "Project" &&
                 props.selectedItem.item + " - " + props.selectedItem.task}
               {props.cardType === "Department" && props.selectedItem.item}
@@ -684,6 +694,24 @@ function TimeCard() {
     <>
       <div className="tc_container">
         <div className="tc_header">
+          {selectedItem && (
+            <Button
+              type="text"
+              shape="circle"
+              icon={<ArrowLeftOutlined style={{ fontSize: "20px" }} />}
+              style={{
+                padding: "20px 20px",
+                fontSize: "20px",
+                color: "#FFFFFF",
+                position: "absolute",
+                left: "10px",
+              }}
+              onClick={() => {
+                setSelectedItem(undefined);
+              }}
+            />
+          )}
+
           <h1>ADAT</h1>
         </div>
 

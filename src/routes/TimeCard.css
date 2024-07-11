@@ -30,6 +30,9 @@ h3 {
 .tc_header {
   background-color: #1a4499;
   height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tc_header > h1 {
