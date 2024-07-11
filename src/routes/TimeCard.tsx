@@ -29,9 +29,9 @@ function RenderTasks(props: {
   const [uniqueItems, setUniqueItems] = useState<TaskData[]>([]);
 
   useEffect(() => {
-    if (props.cardType == "Project") {
+    if (props.cardType === "Project") {
       setUniqueItems(props.projectData.tasks);
-    } else if (props.cardType == "Department") {
+    } else if (props.cardType === "Department") {
       setUniqueItems(
         Array.from(
           props.projectData.tasks
@@ -63,8 +63,8 @@ function RenderTasks(props: {
                 props.setSelectedItem(task);
               }}
             >
-              {props.cardType == "Project" && task.item + " - " + task.task}
-              {props.cardType == "Department" && task.item}
+              {props.cardType === "Project" && task.item + " - " + task.task}
+              {props.cardType === "Department" && task.item}
             </Button>
           );
         })}
@@ -227,6 +227,7 @@ function RecorderConfirm(props: {
   projectData: ProjectData;
   setHasError: CallableFunction;
   setIsLoading: CallableFunction;
+  setSelectedItem: CallableFunction;
 }) {
   return (
     <>
@@ -301,7 +302,7 @@ function RecorderConfirm(props: {
             className="btn_normal"
             type="primary"
             onClick={() => {
-              if (props.id == undefined || props.user == undefined) {
+              if (props.id === null || props.user === undefined) {
                 props.setHasError(true);
                 return;
               }
@@ -317,6 +318,7 @@ function RecorderConfirm(props: {
               )
                 .then(() => {
                   props.setState(RecorderState.Starter);
+                  props.setSelectedItem(undefined);
                 })
                 .catch((error: any) => {
                   console.error("Failed to fetch data:", error);
@@ -445,26 +447,26 @@ function Recorder(props: {
             }}
           >
             <h3 style={{ color: "#FFFFFF", margin: 0 }}>
-              {props.cardType == "Project" &&
+              {props.cardType === "Project" &&
                 props.selectedItem.item + " - " + props.selectedItem.task}
-              {props.cardType == "Department" && props.selectedItem.item}
+              {props.cardType === "Department" && props.selectedItem.item}
             </h3>
           </div>
-          {state == RecorderState.Starter && (
+          {state === RecorderState.Starter && (
             <RecorderStarter
               setState={setState}
               setStartTime={setStartTime}
               setDuration={setDuration}
             />
           )}
-          {state == RecorderState.Timer && (
+          {state === RecorderState.Timer && (
             <RecorderTimer
               setState={setState}
               startTime={startTime}
               setDuration={setDuration}
             />
           )}
-          {state == RecorderState.Confirm && startTime && (
+          {state === RecorderState.Confirm && startTime && (
             <RecorderConfirm
               startTime={startTime}
               duration={duration}
@@ -476,9 +478,10 @@ function Recorder(props: {
               projectData={props.projectData}
               setHasError={props.setHasError}
               setIsLoading={props.setIsLoading}
+              setSelectedItem={props.setSelectedItem}
             />
           )}
-          {state == RecorderState.Editor && (
+          {state === RecorderState.Editor && (
             <RecorderEditor
               setState={setState}
               duration={duration}
@@ -601,7 +604,7 @@ function Loading() {
 }
 
 function TimeCard() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const user = searchParams.get("user");
   const id = searchParams.get("id");
@@ -620,13 +623,13 @@ function TimeCard() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (id == undefined || user == undefined) {
+    if (id === null || user === null) {
       setHasError(true);
       return;
     }
 
     // Check if dep card needs milestone
-    if (milestone == undefined) {
+    if (milestone === null) {
       setHasError(true);
       return;
     }
@@ -647,9 +650,9 @@ function TimeCard() {
             // filter task with Status, Deliverable, Task member
             data.tasks = data.tasks.filter(
               (task) =>
-                task.type == milestone &&
-                task.member == foundMember.englishName &&
-                task.status == "On-going"
+                task.type === milestone &&
+                task.member === foundMember.englishName &&
+                task.status === "On-going"
             );
 
             setProjectData(data);
@@ -664,7 +667,7 @@ function TimeCard() {
         setHasError(true);
         console.error("Failed to fetch data:", error);
       });
-  }, []);
+  }, [id, milestone, user]);
 
   useEffect(() => {
     // console.log("projectData: ", projectData);
