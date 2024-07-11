@@ -16,7 +16,7 @@ const router = createBrowserRouter(
       path: "/cg",
       element: <CardGenerator />,
     },
-  ]
+  ],
   { basename: "/working-hour-system-fe" }
 );
 
