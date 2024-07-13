@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/working-hour-system-fe/static/css/main.8f8cb84d.css",
-    "main.js": "/working-hour-system-fe/static/js/main.19c8233e.js",
+    "main.js": "/working-hour-system-fe/static/js/main.2bf9a807.js",
     "static/js/453.a117722b.chunk.js": "/working-hour-system-fe/static/js/453.a117722b.chunk.js",
     "index.html": "/working-hour-system-fe/index.html",
     "main.8f8cb84d.css.map": "/working-hour-system-fe/static/css/main.8f8cb84d.css.map",
-    "main.19c8233e.js.map": "/working-hour-system-fe/static/js/main.19c8233e.js.map",
+    "main.2bf9a807.js.map": "/working-hour-system-fe/static/js/main.2bf9a807.js.map",
     "453.a117722b.chunk.js.map": "/working-hour-system-fe/static/js/453.a117722b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.8f8cb84d.css",
-    "static/js/main.19c8233e.js"
+    "static/js/main.2bf9a807.js"
   ]
 }
