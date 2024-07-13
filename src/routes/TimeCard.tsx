@@ -149,6 +149,10 @@ function RecorderTimer(props: {
   setState: CallableFunction;
   startTime: Date;
   setDuration: CallableFunction;
+  checkIn: Date | null;
+  setCheckIn: CallableFunction;
+  checkOut: Date | null;
+  setCheckOut: CallableFunction;
 }) {
   return (
     <>
@@ -208,6 +212,8 @@ function RecorderTimer(props: {
               const hours = Math.ceil((seconds / 3600) * 10) / 10;
               props.setDuration(hours);
               props.setState(RecorderState.Confirm);
+              props.setCheckIn(props.startTime);
+              props.setCheckOut(now);
             }}
           />
           <h2>Check Out</h2>
@@ -229,6 +235,10 @@ function RecorderConfirm(props: {
   setHasError: CallableFunction;
   setIsLoading: CallableFunction;
   setSelectedItem: CallableFunction;
+  checkIn: Date | null;
+  setCheckIn: CallableFunction;
+  checkOut: Date | null;
+  setCheckOut: CallableFunction;
 }) {
   return (
     <>
@@ -315,7 +325,9 @@ function RecorderConfirm(props: {
                 props.task.type,
                 props.task.item,
                 props.duration,
-                props.task.task
+                props.task.task,
+                props.checkIn,
+                props.checkOut
               )
                 .then(() => {
                   props.setState(RecorderState.Starter);
@@ -341,6 +353,10 @@ function RecorderEditor(props: {
   setState: CallableFunction;
   duration: number;
   setDuration: CallableFunction;
+  checkIn: Date | null;
+  setCheckIn: CallableFunction;
+  checkOut: Date | null;
+  setCheckOut: CallableFunction;
 }) {
   return (
     <>
@@ -395,6 +411,8 @@ function RecorderEditor(props: {
             type="primary"
             onClick={() => {
               props.setState(RecorderState.Confirm);
+              props.setCheckIn(null);
+              props.setCheckOut(null);
             }}
           >
             Submit
@@ -414,6 +432,10 @@ function Recorder(props: {
   setHasError: CallableFunction;
   setIsLoading: CallableFunction;
   cardType: string | undefined;
+  checkIn: Date | null;
+  setCheckIn: CallableFunction;
+  checkOut: Date | null;
+  setCheckOut: CallableFunction;
 }) {
   const [state, setState] = useState<RecorderState>(RecorderState.Starter);
   const [startTime, setStartTime] = useState<Date>(new Date());
@@ -474,6 +496,10 @@ function Recorder(props: {
               setState={setState}
               startTime={startTime}
               setDuration={setDuration}
+              checkIn={props.checkIn}
+              setCheckIn={props.setCheckIn}
+              checkOut={props.checkOut}
+              setCheckOut={props.setCheckOut}
             />
           )}
           {state === RecorderState.Confirm && startTime && (
@@ -489,6 +515,10 @@ function Recorder(props: {
               setHasError={props.setHasError}
               setIsLoading={props.setIsLoading}
               setSelectedItem={props.setSelectedItem}
+              checkIn={props.checkIn}
+              setCheckIn={props.setCheckIn}
+              checkOut={props.checkOut}
+              setCheckOut={props.setCheckOut}
             />
           )}
           {state === RecorderState.Editor && (
@@ -496,6 +526,10 @@ function Recorder(props: {
               setState={setState}
               duration={duration}
               setDuration={setDuration}
+              checkIn={props.checkIn}
+              setCheckIn={props.setCheckIn}
+              checkOut={props.checkOut}
+              setCheckOut={props.setCheckOut}
             />
           )}
         </div>
@@ -533,6 +567,10 @@ function MainBody(props: {
   member: MemberData | undefined;
   setIsLoading: CallableFunction;
   cardType: string | undefined;
+  checkIn: Date | null;
+  setCheckIn: CallableFunction;
+  checkOut: Date | null;
+  setCheckOut: CallableFunction;
 }) {
   return (
     <div
@@ -590,6 +628,10 @@ function MainBody(props: {
           setHasError={props.setHasError}
           setIsLoading={props.setIsLoading}
           cardType={props.cardType}
+          checkIn={props.checkIn}
+          setCheckIn={props.setCheckIn}
+          checkOut={props.checkOut}
+          setCheckOut={props.setCheckOut}
         />
       )}
     </div>
@@ -631,6 +673,9 @@ function TimeCard() {
 
   const [hasError, setHasError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [checkIn, setCheckIn] = useState<Date | null>(null);
+  const [checkOut, setCheckOut] = useState<Date | null>(null);
 
   useEffect(() => {
     if (id === null || user === null) {
@@ -732,6 +777,10 @@ function TimeCard() {
             member={member}
             setIsLoading={setIsLoading}
             cardType={cardType}
+            checkIn={checkIn}
+            setCheckIn={setCheckIn}
+            checkOut={checkOut}
+            setCheckOut={setCheckOut}
           />
         )}
       </div>
