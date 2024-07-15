@@ -59,30 +59,26 @@ export const uploadWorkingHours = (
   return new Promise((resolve, reject) => {
     const scriptUrl = `https://pctool.micadat.com/api/work_hour/`;
 
-    console.log("upload: ", userId, project, milestone, duration, task);
-
+    let body: any = {
+      project_name: project,
+      deliverable: milestone,
+      task: task,
+      member: userId,
+      work_hour: duration,
+      check_in: null,
+      check_out: null,
+    };
     if (checkIn) {
-      console.log(checkIn.toISOString());
+      body.check_in = checkIn.toISOString();
     }
     if (checkOut) {
-      console.log(checkOut.toISOString());
+      body.check_out = checkOut.toISOString();
     }
 
-    resolve(0);
-    return;
-
     axios
-      .post(scriptUrl, {
-        project_name: project,
-        deliverable: milestone,
-        task: task,
-        member: userId,
-        work_hour: duration,
-        check_in: "",
-        check_out: "",
-      })
+      .post(scriptUrl, body)
       .then((res) => {
-        console.log("upload: ", res);
+        console.log("upload working hours success: ", res);
         resolve(res);
       })
       .catch((error) => {

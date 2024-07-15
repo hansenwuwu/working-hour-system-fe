@@ -21,10 +21,10 @@ h3 {
 
 .tc_container {
   background-color: #ffffff;
-  height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
+  margin-bottom: 30px;
 }
 
 .tc_header {
@@ -33,6 +33,10 @@ h3 {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
 }
 
 .tc_header > h1 {

@@ -542,11 +542,11 @@ function ErrorPage() {
   return (
     <>
       <div
-        className="tc_container"
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          height: "calc(100vh - 70px)",
         }}
       >
         <Result status="warning" title="Sorry, the page cannot be found." />
@@ -577,24 +577,33 @@ function MainBody(props: {
       style={{
         marginLeft: "30px",
         marginRight: "30px",
+        marginTop: "70px",
       }}
     >
       {props.member && (
         <div className="tc_avatar_container">
           <Avatar size={64} icon={<UserOutlined />} />
-          <h3>{props.member.englishName}</h3>
+          <h3 style={{ textAlign: "center" }}>{props.member.englishName}</h3>
         </div>
       )}
       {props.projectData?.project && (
         <div className="tc_project_container">
-          <h3 style={{ marginBottom: "20px", fontWeight: "300" }}>
+          <h3
+            style={{
+              marginBottom: "20px",
+              fontWeight: "300",
+              textAlign: "center",
+            }}
+          >
             {props.projectData?.project}
           </h3>
         </div>
       )}
       {props.milestone && (
         <div className="tc_type_container">
-          <h2 style={{ marginBottom: "20px" }}>{props.milestone}</h2>
+          <h2 style={{ marginBottom: "20px", textAlign: "center" }}>
+            {props.milestone}
+          </h2>
         </div>
       )}
 
@@ -642,11 +651,11 @@ function Loading() {
   return (
     <>
       <div
-        className="tc_container"
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          height: "calc(100vh - 70px)",
         }}
       >
         <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
