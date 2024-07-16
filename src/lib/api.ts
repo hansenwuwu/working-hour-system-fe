@@ -87,19 +87,3 @@ export const uploadWorkingHours = (
       });
   });
 };
-
-export const getProjectDetail = (sheetId: string) => {
-  return new Promise<ProjectData>((resolve, reject) => {
-    const scriptUrl = `https://script.google.com/macros/s/AKfycbziBGRJyORrSBE8VOgEizLByQIp2CrghKVTj9x9kXb2LRESam1NqzYer-Hmd6U9Kw6ZEw/exec?apiType=getProjectDetail&sheetId=${sheetId}`;
-
-    axios
-      .get(scriptUrl)
-      .then((response) => {
-        const project: ProjectData = new ProjectData(response.data);
-        resolve(project);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};

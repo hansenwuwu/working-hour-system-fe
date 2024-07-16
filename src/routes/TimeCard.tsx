@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import "./TimeCard.css";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Input, Result, Spin } from "antd";
-import { uploadWorkingHours, getProjectDetail } from "../lib/api";
+import { getTasks, getMembers, uploadWorkingHours } from "../lib/api";
 import { ProjectData, MemberData, TaskData } from "../lib/models";
 import moment from "moment";
 import {
@@ -698,35 +698,45 @@ function TimeCard() {
       return;
     }
 
-    getProjectDetail(id)
-      .then((data: ProjectData) => {
-        console.log("data: ", data);
-        // filter task with Status, Deliverable, Task member
-        data.tasks = data.tasks.filter(
-          (task) =>
-            task.type === milestone &&
-            task.jobNumber === user &&
-            task.status === "On-going"
-        );
-
-        const foundMember = data.members.find(
-          (member) => member.jobNumber === user
-        );
+    getMembers(id)
+      .then((data: MemberData[]) => {
+        const foundMember = data.find((data) => data.jobNumber === user);
         if (foundMember === undefined) {
           setHasError(true);
           return;
         }
-        setMembers(data.members);
+
+        setMembers(data);
         setMember(foundMember);
 
-        setProjectData(data);
-        setCardType(data.cardType);
+        getTasks(id)
+          .then((data: ProjectData) => {
+            // filter task with Status, Deliverable, Task member
+            data.tasks = data.tasks.filter(
+              (task) =>
+                task.type === milestone &&
+                task.member === foundMember.englishName &&
+                task.status === "On-going"
+            );
+
+            setProjectData(data);
+            setCardType(data.cardType);
+          })
+          .catch((error: any) => {
+            setHasError(true);
+            console.error("Failed to fetch data:", error);
+          });
       })
       .catch((error: any) => {
         setHasError(true);
         console.error("Failed to fetch data:", error);
       });
   }, [id, milestone, user]);
+
+  useEffect(() => {
+    // console.log("projectData: ", projectData);
+    // console.log("members: ", members);
+  }, [members, projectData]);
 
   useEffect(() => {
     if (projectData && members) {
