@@ -13,6 +13,11 @@ import {
   LoadingOutlined,
   ArrowLeftOutlined,
 } from "@ant-design/icons";
+import { importAll } from "./utils";
+
+const avatarImages = importAll(
+  require.context("../assets/avatars", false, /\.(png|jpg|svg)$/)
+);
 
 enum RecorderState {
   Starter = "starter",
@@ -572,6 +577,13 @@ function MainBody(props: {
   checkOut: Date | null;
   setCheckOut: CallableFunction;
 }) {
+  const getAvatar = (id: string) => {
+    if (id in avatarImages) {
+      return avatarImages[id];
+    }
+    return avatarImages["T9999"];
+  };
+
   return (
     <div
       style={{
@@ -582,7 +594,7 @@ function MainBody(props: {
     >
       {props.member && (
         <div className="tc_avatar_container">
-          <Avatar size={64} icon={<UserOutlined />} />
+          <Avatar size={64} src={getAvatar(props.member.jobNumber)} />
           <h3 style={{ textAlign: "center" }}>{props.member.englishName}</h3>
         </div>
       )}
