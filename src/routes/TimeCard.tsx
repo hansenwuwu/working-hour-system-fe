@@ -13,7 +13,7 @@ import {
   LoadingOutlined,
   ArrowLeftOutlined,
 } from "@ant-design/icons";
-import { importAll } from "./utils";
+import { importAll, formatTime } from "./utils";
 
 const avatarImages = importAll(
   require.context("../assets/avatars", false, /\.(png|jpg|svg)$/)
@@ -158,7 +158,23 @@ function RecorderTimer(props: {
   setCheckIn: CallableFunction;
   checkOut: Date | null;
   setCheckOut: CallableFunction;
+  secondsElapsed: number;
+  setSecondsElapsed: CallableFunction;
 }) {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (props.startTime) {
+        const currentTime = new Date();
+        const elapsed = Math.floor(
+          (currentTime.getTime() - props.startTime.getTime()) / 1000
+        );
+        props.setSecondsElapsed(elapsed);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [props.startTime]);
+
   return (
     <>
       <div
@@ -182,7 +198,9 @@ function RecorderTimer(props: {
             borderRadius: "20px",
           }}
         >
-          <h3 style={{ color: "#FFFFFF", margin: 0 }}>In Progress</h3>
+          <h3 style={{ color: "#FFFFFF", margin: 0 }}>
+            In Progress - {formatTime(props.secondsElapsed)}
+          </h3>
         </div>
         <div
           style={{
@@ -447,6 +465,7 @@ function Recorder(props: {
   const [state, setState] = useState<RecorderState>(RecorderState.Starter);
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [duration, setDuration] = useState<number>(0);
+  const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
 
   return (
     <>
@@ -507,6 +526,8 @@ function Recorder(props: {
               setCheckIn={props.setCheckIn}
               checkOut={props.checkOut}
               setCheckOut={props.setCheckOut}
+              secondsElapsed={secondsElapsed}
+              setSecondsElapsed={setSecondsElapsed}
             />
           )}
           {state === RecorderState.Confirm && startTime && (
