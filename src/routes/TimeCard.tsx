@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./TimeCard.css";
-import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Input, Result, Spin } from "antd";
 import { getTasks, getMembers, uploadWorkingHours } from "../lib/api";
 import { ProjectData, MemberData, TaskData } from "../lib/models";
@@ -83,6 +82,7 @@ function RecorderStarter(props: {
   setState: CallableFunction;
   setStartTime: CallableFunction;
   setDuration: CallableFunction;
+  storageKey: string;
 }) {
   useEffect(() => {
     props.setDuration(0);
@@ -115,7 +115,9 @@ function RecorderStarter(props: {
             style={{ padding: "30px 30px", fontSize: "30px" }}
             onClick={() => {
               props.setState(RecorderState.Timer);
-              props.setStartTime(new Date());
+              const now = new Date();
+              props.setStartTime(now);
+              localStorage.setItem(props.storageKey, now.toISOString());
             }}
           />
           <h2>Check In</h2>
@@ -160,20 +162,25 @@ function RecorderTimer(props: {
   setCheckOut: CallableFunction;
   secondsElapsed: number;
   setSecondsElapsed: CallableFunction;
+  storageKey: string;
 }) {
   useEffect(() => {
+    doOneSecond();
     const interval = setInterval(() => {
-      if (props.startTime) {
-        const currentTime = new Date();
-        const elapsed = Math.floor(
-          (currentTime.getTime() - props.startTime.getTime()) / 1000
-        );
-        props.setSecondsElapsed(elapsed);
-      }
+      doOneSecond();
     }, 1000);
-
     return () => clearInterval(interval);
   }, [props.startTime]);
+
+  const doOneSecond = () => {
+    if (props.startTime) {
+      const currentTime = new Date();
+      const elapsed = Math.floor(
+        (currentTime.getTime() - props.startTime.getTime()) / 1000
+      );
+      props.setSecondsElapsed(elapsed);
+    }
+  };
 
   return (
     <>
@@ -228,6 +235,7 @@ function RecorderTimer(props: {
               color: "#FFFFFF",
             }}
             onClick={() => {
+              localStorage.removeItem(props.storageKey);
               const now = new Date();
               let seconds = now.getTime() - props.startTime.getTime();
               seconds = seconds / 1000;
@@ -467,6 +475,20 @@ function Recorder(props: {
   const [duration, setDuration] = useState<number>(0);
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
 
+  const [storageKey, setStorageKey] = useState<string>("");
+
+  useEffect(() => {
+    if (props.selectedItem) {
+      const myStorageKey = `${props.id}_${props.user}_${props.projectData.project}_${props.selectedItem.type}_${props.selectedItem.task}_startTime`;
+      setStorageKey(myStorageKey);
+      const storedStartTime = localStorage.getItem(myStorageKey);
+      if (storedStartTime) {
+        setState(RecorderState.Timer);
+        setStartTime(new Date(storedStartTime));
+      }
+    }
+  }, [props.selectedItem]);
+
   return (
     <>
       {props.selectedItem && (
@@ -515,6 +537,7 @@ function Recorder(props: {
               setState={setState}
               setStartTime={setStartTime}
               setDuration={setDuration}
+              storageKey={storageKey}
             />
           )}
           {state === RecorderState.Timer && (
@@ -528,6 +551,7 @@ function Recorder(props: {
               setCheckOut={props.setCheckOut}
               secondsElapsed={secondsElapsed}
               setSecondsElapsed={setSecondsElapsed}
+              storageKey={storageKey}
             />
           )}
           {state === RecorderState.Confirm && startTime && (
@@ -769,11 +793,6 @@ function TimeCard() {
         console.error("Failed to fetch data:", error);
       });
   }, [id, milestone, user]);
-
-  useEffect(() => {
-    // console.log("projectData: ", projectData);
-    // console.log("members: ", members);
-  }, [members, projectData]);
 
   useEffect(() => {
     if (projectData && members) {
