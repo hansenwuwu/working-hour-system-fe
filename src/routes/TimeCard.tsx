@@ -244,6 +244,7 @@ function RecorderConfirm(props: {
   setCheckIn: CallableFunction;
   checkOut: Date | null;
   setCheckOut: CallableFunction;
+  member: MemberData;
 }) {
   return (
     <>
@@ -325,7 +326,7 @@ function RecorderConfirm(props: {
               props.setIsLoading(true);
               uploadWorkingHours(
                 props.id,
-                props.user,
+                props.member.englishName,
                 props.projectData.project,
                 props.task.type,
                 props.task.item,
@@ -441,6 +442,7 @@ function Recorder(props: {
   setCheckIn: CallableFunction;
   checkOut: Date | null;
   setCheckOut: CallableFunction;
+  member: MemberData;
 }) {
   const [state, setState] = useState<RecorderState>(RecorderState.Starter);
   const [startTime, setStartTime] = useState<Date>(new Date());
@@ -524,6 +526,7 @@ function Recorder(props: {
               setCheckIn={props.setCheckIn}
               checkOut={props.checkOut}
               setCheckOut={props.setCheckOut}
+              member={props.member}
             />
           )}
           {state === RecorderState.Editor && (
@@ -639,7 +642,7 @@ function MainBody(props: {
           />
         </>
       )}
-      {props.projectData && props.selectedItem && (
+      {props.projectData && props.selectedItem && props.member && (
         <Recorder
           projectData={props.projectData}
           selectedItem={props.selectedItem}
@@ -653,6 +656,7 @@ function MainBody(props: {
           setCheckIn={props.setCheckIn}
           checkOut={props.checkOut}
           setCheckOut={props.setCheckOut}
+          member={props.member}
         />
       )}
     </div>
