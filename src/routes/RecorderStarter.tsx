@@ -3,12 +3,14 @@ import "./TimeCard.css";
 import { Button } from "antd";
 import { EditOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import { RecorderState } from "./utils";
+import { TaskData } from "../lib/models";
 
 export function RecorderStarter(props: {
   setState: CallableFunction;
   setStartTime: CallableFunction;
   setDuration: CallableFunction;
   storageKey: string;
+  selectedItem: TaskData;
 }) {
   useEffect(() => {
     props.setDuration(0);
@@ -43,7 +45,18 @@ export function RecorderStarter(props: {
               props.setState(RecorderState.Timer);
               const now = new Date();
               props.setStartTime(now);
-              localStorage.setItem(props.storageKey, now.toISOString());
+              localStorage.setItem(
+                props.storageKey + "_startTime",
+                now.toISOString()
+              );
+              localStorage.setItem(
+                props.storageKey + "_task",
+                props.selectedItem.task
+              );
+              localStorage.setItem(
+                props.storageKey + "_item",
+                props.selectedItem.item
+              );
             }}
           />
           <h2>Check In</h2>

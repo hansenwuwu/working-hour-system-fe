@@ -8,6 +8,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import { ErrorPage } from "./ErrorPage";
 import { Loading } from "./Loading";
 import { MainBody } from "./MainBody";
+import { RecorderState } from "./utils";
 
 function TimeCard() {
   const [searchParams] = useSearchParams();
@@ -32,6 +33,8 @@ function TimeCard() {
   const [checkOut, setCheckOut] = useState<Date | null>(null);
 
   const [storageKey, setStorageKey] = useState<string>("");
+  const [state, setState] = useState<RecorderState>(RecorderState.Starter);
+  const [startTime, setStartTime] = useState<Date>(new Date());
 
   useEffect(() => {
     if (id === null || user === null) {
@@ -87,17 +90,31 @@ function TimeCard() {
       const curStorageKey = `${id}_${user}_${milestone}`;
       setStorageKey(curStorageKey);
 
-      const storedTask = localStorage.getItem(curStorageKey + "_task");
       const storedStartTime = localStorage.getItem(
         curStorageKey + "_startTime"
       );
+      const storedTask = localStorage.getItem(curStorageKey + "_task");
+      const storedItem = localStorage.getItem(curStorageKey + "_item");
 
       if (storedTask && storedStartTime) {
-        // setState(RecorderState.Timer);
-        // setStartTime(new Date(storedStartTime));
+        const foundTask = projectData.tasks.find((task) => {
+          if (task.task != storedTask) {
+            return false;
+          }
+          if (cardType == "Project" && task.item != storedItem) {
+            return false;
+          }
+          return true;
+        });
+
+        if (foundTask) {
+          setState(RecorderState.Timer);
+          setStartTime(new Date(storedStartTime));
+          setSelectedItem(foundTask);
+        }
       }
     }
-  }, [projectData, members]);
+  }, [projectData, members, cardType]);
 
   return (
     <>
@@ -145,6 +162,12 @@ function TimeCard() {
             setCheckIn={setCheckIn}
             checkOut={checkOut}
             setCheckOut={setCheckOut}
+            storageKey={storageKey}
+            setStorageKey={setStorageKey}
+            state={state}
+            setState={setState}
+            startTime={startTime}
+            setStartTime={setStartTime}
           />
         )}
       </div>

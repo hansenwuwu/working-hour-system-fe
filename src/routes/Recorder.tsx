@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./TimeCard.css";
 import { ProjectData, MemberData, TaskData } from "../lib/models";
 import moment from "moment";
@@ -22,29 +22,15 @@ export function Recorder(props: {
   checkOut: Date | null;
   setCheckOut: CallableFunction;
   member: MemberData;
+  storageKey: string;
+  setStorageKey: CallableFunction;
+  state: RecorderState;
+  setState: CallableFunction;
+  startTime: Date;
+  setStartTime: CallableFunction;
 }) {
-  const [state, setState] = useState<RecorderState>(RecorderState.Starter);
-  const [startTime, setStartTime] = useState<Date>(new Date());
   const [duration, setDuration] = useState<number>(0);
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
-
-  const [storageKey, setStorageKey] = useState<string>("");
-
-  useEffect(() => {
-    if (props.selectedItem) {
-      const curStorageKey = `${props.id}_${props.user}_${props.selectedItem.type}`;
-      setStorageKey(curStorageKey);
-
-      const storedTask = localStorage.getItem(curStorageKey + "_task");
-      const storedStartTime = localStorage.getItem(
-        curStorageKey + "_startTime"
-      );
-      if (storedStartTime) {
-        setState(RecorderState.Timer);
-        setStartTime(new Date(storedStartTime));
-      }
-    }
-  }, [props.selectedItem]);
 
   return (
     <>
@@ -89,18 +75,19 @@ export function Recorder(props: {
               {props.cardType === "Department" && props.selectedItem.item}
             </h3>
           </div>
-          {state === RecorderState.Starter && (
+          {props.state === RecorderState.Starter && (
             <RecorderStarter
-              setState={setState}
-              setStartTime={setStartTime}
+              setState={props.setState}
+              setStartTime={props.setStartTime}
               setDuration={setDuration}
-              storageKey={storageKey}
+              storageKey={props.storageKey}
+              selectedItem={props.selectedItem}
             />
           )}
-          {state === RecorderState.Timer && (
+          {props.state === RecorderState.Timer && (
             <RecorderTimer
-              setState={setState}
-              startTime={startTime}
+              setState={props.setState}
+              startTime={props.startTime}
               setDuration={setDuration}
               checkIn={props.checkIn}
               setCheckIn={props.setCheckIn}
@@ -108,15 +95,15 @@ export function Recorder(props: {
               setCheckOut={props.setCheckOut}
               secondsElapsed={secondsElapsed}
               setSecondsElapsed={setSecondsElapsed}
-              storageKey={storageKey}
+              storageKey={props.storageKey}
             />
           )}
-          {state === RecorderState.Confirm && startTime && (
+          {props.state === RecorderState.Confirm && props.startTime && (
             <RecorderConfirm
-              startTime={startTime}
+              startTime={props.startTime}
               duration={duration}
               setDuration={setDuration}
-              setState={setState}
+              setState={props.setState}
               id={props.id}
               user={props.user}
               task={props.selectedItem}
@@ -131,9 +118,9 @@ export function Recorder(props: {
               member={props.member}
             />
           )}
-          {state === RecorderState.Editor && (
+          {props.state === RecorderState.Editor && (
             <RecorderEditor
-              setState={setState}
+              setState={props.setState}
               duration={duration}
               setDuration={setDuration}
               checkIn={props.checkIn}

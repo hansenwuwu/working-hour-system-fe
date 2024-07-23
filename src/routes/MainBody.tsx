@@ -5,6 +5,7 @@ import { ProjectData, MemberData, TaskData } from "../lib/models";
 import { importAll } from "./utils";
 import { RenderTasks } from "./RenderTasks";
 import { Recorder } from "./Recorder";
+import { RecorderState } from "./utils";
 
 const avatarImages = importAll(
   require.context("../assets/avatars", false, /\.(png|jpg|svg)$/)
@@ -26,6 +27,12 @@ export function MainBody(props: {
   setCheckIn: CallableFunction;
   checkOut: Date | null;
   setCheckOut: CallableFunction;
+  storageKey: string;
+  setStorageKey: CallableFunction;
+  state: RecorderState;
+  setState: CallableFunction;
+  startTime: Date;
+  setStartTime: CallableFunction;
 }) {
   const getAvatar = (id: string) => {
     if (id in avatarImages) {
@@ -104,6 +111,12 @@ export function MainBody(props: {
           checkOut={props.checkOut}
           setCheckOut={props.setCheckOut}
           member={props.member}
+          storageKey={props.storageKey}
+          setStorageKey={props.setStorageKey}
+          state={props.state}
+          setState={props.setState}
+          startTime={props.startTime}
+          setStartTime={props.setStartTime}
         />
       )}
     </div>

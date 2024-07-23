@@ -87,7 +87,9 @@ export function RecorderTimer(props: {
               color: "#FFFFFF",
             }}
             onClick={() => {
-              localStorage.removeItem(props.storageKey);
+              localStorage.removeItem(props.storageKey + "_startTime");
+              localStorage.removeItem(props.storageKey + "_task");
+              localStorage.removeItem(props.storageKey + "_item");
               const now = new Date();
               let seconds = now.getTime() - props.startTime.getTime();
               seconds = seconds / 1000;
