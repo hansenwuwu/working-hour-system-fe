@@ -21,3 +21,11 @@ export const formatTime = (seconds: number): string => {
     "0"
   )}:${String(secs).padStart(2, "0")}`;
 };
+
+export enum RecorderState {
+  Starter = "starter",
+  Timer = "timer",
+  Editor = "editor",
+  Confirm = "confirm",
+  Result = "result",
+}
