@@ -97,8 +97,11 @@ h3 {
   margin-top: 5px;
   color: #1a4499;
   border-color: #1a4499;
-  height: 40px;
+  min-height: 40px;
+  white-space: normal;
+  word-break: break-word;
   border-radius: 20px;
+  height: auto;
 }
 
 .btn_normal {
