@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./TimeCard.css";
 import { Button } from "antd";
-import { getTasks, getMembers } from "../lib/api";
+import { getProjectDetail } from "../lib/api";
 import { ProjectData, MemberData, TaskData } from "../lib/models";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { ErrorPage } from "./ErrorPage";
@@ -48,34 +48,28 @@ function TimeCard() {
       return;
     }
 
-    getMembers(id)
-      .then((data: MemberData[]) => {
-        const foundMember = data.find((data) => data.jobNumber === user);
+    getProjectDetail(id)
+      .then((value: ProjectData) => {
+        const foundMember = value.members.find(
+          (data) => data.jobNumber === user
+        );
         if (foundMember === undefined) {
           setHasError(true);
           return;
         }
 
-        setMembers(data);
+        setMembers(value.members);
         setMember(foundMember);
 
-        getTasks(id)
-          .then((data: ProjectData) => {
-            // filter task with Status, Deliverable, Task member
-            data.tasks = data.tasks.filter(
-              (task) =>
-                task.type === milestone &&
-                task.member === foundMember.englishName &&
-                task.status === "On-going"
-            );
+        value.tasks = value.tasks.filter(
+          (task) =>
+            task.type === milestone &&
+            task.member === foundMember.englishName &&
+            task.status === "On-going"
+        );
 
-            setProjectData(data);
-            setCardType(data.cardType);
-          })
-          .catch((error: any) => {
-            setHasError(true);
-            console.error("Failed to fetch data:", error);
-          });
+        setProjectData(value);
+        setCardType(value.cardType);
       })
       .catch((error: any) => {
         setHasError(true);
