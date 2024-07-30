@@ -110,7 +110,8 @@ export function RecorderConfirm(props: {
                 props.duration,
                 props.task.task,
                 props.checkIn,
-                props.checkOut
+                props.checkOut,
+                props.projectData.cardType
               )
                 .then(() => {
                   props.setState(RecorderState.Starter);

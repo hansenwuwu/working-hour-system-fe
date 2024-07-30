@@ -54,15 +54,23 @@ export const uploadWorkingHours = (
   duration: number,
   task: string,
   checkIn: Date | null,
-  checkOut: Date | null
+  checkOut: Date | null,
+  cardType: string
 ) => {
   return new Promise((resolve, reject) => {
     const scriptUrl = `https://pctool.micadat.com/api/work_hour/`;
 
+    let output_task = "";
+    if (cardType.toLowerCase() == "department") {
+      output_task = item;
+    } else if (cardType.toLowerCase() == "project") {
+      output_task = item + ", " + task;
+    }
+
     let body: any = {
       project_name: project,
       deliverable: milestone,
-      task: task,
+      task: output_task,
       member: userId,
       work_hour: duration,
       check_in: null,
