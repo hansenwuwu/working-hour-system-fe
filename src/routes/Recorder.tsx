@@ -7,6 +7,8 @@ import { RecorderStarter } from "./RecorderStarter";
 import { RecorderTimer } from "./RecorderTimer";
 import { RecorderConfirm } from "./RecorderConfirm";
 import { RecorderEditor } from "./RecorderEditor";
+import { Button } from "antd";
+import { CaretLeftOutlined } from "@ant-design/icons";
 
 export function Recorder(props: {
   projectData: ProjectData;
@@ -60,6 +62,21 @@ export function Recorder(props: {
               borderRadius: "20px",
             }}
           >
+            <Button
+              type="text"
+              shape="circle"
+              icon={<CaretLeftOutlined style={{ fontSize: "20px" }} />}
+              style={{
+                padding: "20px 20px",
+                fontSize: "20px",
+                color: "#FFFFFF",
+                position: "absolute",
+                left: "30px",
+              }}
+              onClick={() => {
+                props.setSelectedItem(undefined);
+              }}
+            />
             <h3
               style={{
                 color: "#FFFFFF",

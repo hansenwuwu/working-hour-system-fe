@@ -114,24 +114,6 @@ function TimeCard() {
     <>
       <div className="tc_container">
         <div className="tc_header">
-          {selectedItem && (
-            <Button
-              type="text"
-              shape="circle"
-              icon={<ArrowLeftOutlined style={{ fontSize: "20px" }} />}
-              style={{
-                padding: "20px 20px",
-                fontSize: "20px",
-                color: "#FFFFFF",
-                position: "absolute",
-                left: "10px",
-              }}
-              onClick={() => {
-                setSelectedItem(undefined);
-              }}
-            />
-          )}
-
           <h1>ADAT</h1>
         </div>
 
