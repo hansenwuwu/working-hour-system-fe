@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ProjectData, MemberData } from "./models";
+import { ProjectData, MemberData, WorkingHourRecord } from "./models";
 
 const HOST_URL =
   "https://script.google.com/macros/s/AKfycbw5Rhnfs9OQDsIsqNUJExYMhb0EAk0kgRBtni2dFvMMbo8pBBrpFY4zviDxtcpvVpRj/exec";
@@ -105,6 +105,33 @@ export const getProjectDetail = (sheetId: string) => {
       .then((response) => {
         const project: ProjectData = new ProjectData(response.data);
         resolve(project);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+export const getWorkingHourRecords = (
+  memberName: string,
+  projectName: string
+) => {
+  return new Promise<WorkingHourRecord[]>((resolve, reject) => {
+    const scriptUrl = `http://192.168.3.67:8080/api/work_hour/`;
+
+    axios
+      .get(scriptUrl, {
+        params: {
+          member: memberName,
+          project_name: projectName,
+        },
+      })
+      .then((response) => {
+        const records: WorkingHourRecord[] = [];
+        response.data.forEach((item: any) => {
+          records.push(item);
+        });
+        resolve(records);
       })
       .catch((error) => {
         reject(error);

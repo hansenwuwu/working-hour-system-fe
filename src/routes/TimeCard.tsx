@@ -4,11 +4,12 @@ import "./TimeCard.css";
 import { Button } from "antd";
 import { getProjectDetail } from "../lib/api";
 import { ProjectData, MemberData, TaskData } from "../lib/models";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { BarChartOutlined } from "@ant-design/icons";
 import { ErrorPage } from "./ErrorPage";
 import { Loading } from "./Loading";
 import { MainBody } from "./MainBody";
 import { RecorderState } from "./utils";
+import WorkingHourRecordsModal from "./WorkingHourRecordsModal";
 
 function TimeCard() {
   const [searchParams] = useSearchParams();
@@ -35,6 +36,9 @@ function TimeCard() {
   const [storageKey, setStorageKey] = useState<string>("");
   const [state, setState] = useState<RecorderState>(RecorderState.Starter);
   const [startTime, setStartTime] = useState<Date>(new Date());
+
+  const [isWorkingHourRecordsModalOpen, setIsWorkingHourRecordsModalOpen] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (id === null || user === null) {
@@ -114,6 +118,25 @@ function TimeCard() {
     <>
       <div className="tc_container">
         <div className="tc_header">
+          {!isLoading && (
+            <Button
+              type="text"
+              shape="default"
+              icon={<BarChartOutlined style={{ fontSize: "20px" }} />}
+              style={{
+                padding: "20px 20px",
+                fontSize: "20px",
+                color: "#FFFFFF",
+                position: "absolute",
+                left: "10px",
+                backgroundColor: "#7589bb",
+              }}
+              onClick={() => {
+                setIsWorkingHourRecordsModalOpen(true);
+              }}
+            />
+          )}
+
           <h1>ADAT</h1>
         </div>
 
@@ -144,6 +167,15 @@ function TimeCard() {
             setState={setState}
             startTime={startTime}
             setStartTime={setStartTime}
+          />
+        )}
+
+        {projectData && user && member && (
+          <WorkingHourRecordsModal
+            isModalOpen={isWorkingHourRecordsModalOpen}
+            setIsModalOpen={setIsWorkingHourRecordsModalOpen}
+            projectData={projectData}
+            member={member}
           />
         )}
       </div>

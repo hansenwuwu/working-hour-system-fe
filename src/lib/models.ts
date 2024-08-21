@@ -69,3 +69,31 @@ export class MemberData {
     this.englishName = data.englishName;
   }
 }
+
+export class WorkingHourRecord {
+  projectName: string;
+  deliverable: string;
+  task: string;
+  member: string;
+  checkIn: string;
+  checkOut: string;
+  workHour: number;
+
+  constructor(data: {
+    project_name: string;
+    deliverable: string;
+    task: string;
+    member: string;
+    check_in: string;
+    check_out: string;
+    work_hour: number;
+  }) {
+    this.projectName = data.project_name;
+    this.deliverable = data.deliverable;
+    this.task = data.task;
+    this.member = data.member;
+    this.checkIn = data.check_in;
+    this.checkOut = data.check_out;
+    this.workHour = data.work_hour;
+  }
+}
