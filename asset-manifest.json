@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/working-hour-system-fe/static/css/main.b794ad6f.css",
-    "main.js": "/working-hour-system-fe/static/js/main.0f72c03b.js",
+    "main.css": "/working-hour-system-fe/static/css/main.807aa424.css",
+    "main.js": "/working-hour-system-fe/static/js/main.be1df7c7.js",
     "static/js/453.22cd0bc6.chunk.js": "/working-hour-system-fe/static/js/453.22cd0bc6.chunk.js",
     "static/media/T0100_Debby.jpg": "/working-hour-system-fe/static/media/T0100_Debby.37b2d6cbd326273cce62.jpg",
     "static/media/T0040_Demmy.jpg": "/working-hour-system-fe/static/media/T0040_Demmy.e1aad55f43a78e8dae01.jpg",
@@ -53,12 +53,12 @@
     "static/media/T0095_Benson.jpg": "/working-hour-system-fe/static/media/T0095_Benson.18cc5f7e9303466c8e58.jpg",
     "static/media/T0090_Bowen.jpg": "/working-hour-system-fe/static/media/T0090_Bowen.533b77bad8d03dc9c071.jpg",
     "index.html": "/working-hour-system-fe/index.html",
-    "main.b794ad6f.css.map": "/working-hour-system-fe/static/css/main.b794ad6f.css.map",
-    "main.0f72c03b.js.map": "/working-hour-system-fe/static/js/main.0f72c03b.js.map",
+    "main.807aa424.css.map": "/working-hour-system-fe/static/css/main.807aa424.css.map",
+    "main.be1df7c7.js.map": "/working-hour-system-fe/static/js/main.be1df7c7.js.map",
     "453.22cd0bc6.chunk.js.map": "/working-hour-system-fe/static/js/453.22cd0bc6.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b794ad6f.css",
-    "static/js/main.0f72c03b.js"
+    "static/css/main.807aa424.css",
+    "static/js/main.be1df7c7.js"
   ]
 }
