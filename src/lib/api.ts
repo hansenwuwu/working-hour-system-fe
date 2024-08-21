@@ -117,7 +117,7 @@ export const getWorkingHourRecords = (
   projectName: string
 ) => {
   return new Promise<WorkingHourRecord[]>((resolve, reject) => {
-    const scriptUrl = `http://192.168.3.67:8080/api/work_hour/`;
+    const scriptUrl = `https://pctool.micadat.com/api/work_hour/`;
 
     axios
       .get(scriptUrl, {

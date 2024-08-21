@@ -68,6 +68,7 @@ function WorkingHourRecordsModal(props: {
           }))}
           pagination={false}
           size="small"
+          className="custom-table"
         />
       </Modal>
     </>
