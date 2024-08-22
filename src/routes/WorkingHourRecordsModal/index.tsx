@@ -13,6 +13,9 @@ function WorkingHourRecordsModal(props: {
 }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [records, setRecords] = useState<WorkingHourRecord[]>([]);
+  const [dateToRecords, setDateToRecords] = useState<
+    Map<string, WorkingHourRecord[]>
+  >(new Map<string, WorkingHourRecord[]>());
 
   const columns: TableProps<WorkingHourRecord>["columns"] = [
     {
@@ -27,16 +30,24 @@ function WorkingHourRecordsModal(props: {
     },
     {
       title: "Work hour",
-      dataIndex: "work_hour",
-      key: "work_hour",
+      dataIndex: "workHour",
+      key: "workHour",
     },
   ];
 
   useEffect(() => {
     if (props.isModalOpen) {
       getWorkingHourRecords(props.member.englishName, props.projectData.project)
-        .then((value: WorkingHourRecord[]) => {
-          setRecords(value);
+        .then((_records: WorkingHourRecord[]) => {
+          let date_to_records = new Map<string, WorkingHourRecord[]>();
+          for (let i = 0; i < _records.length; i++) {
+            const dateKey = _records[i].createdAt;
+            if (!date_to_records.has(dateKey)) {
+              date_to_records.set(dateKey, []);
+            }
+            date_to_records.get(dateKey)?.push(_records[i]);
+          }
+          setDateToRecords(date_to_records);
         })
         .catch((error: any) => {})
         .finally(() => {
@@ -60,16 +71,21 @@ function WorkingHourRecordsModal(props: {
         className="modal"
         centered={true}
       >
-        <Table
-          columns={columns}
-          dataSource={records.map((item, index) => ({
-            ...item,
-            key: index,
-          }))}
-          pagination={false}
-          size="small"
-          className="custom-table"
-        />
+        {Array.from(dateToRecords.entries()).map(([date, records]) => (
+          <div key={date}>
+            <h4>{date}</h4>
+            <Table
+              columns={columns}
+              dataSource={records.map((item, index) => ({
+                ...item,
+                key: index,
+              }))}
+              pagination={false}
+              size="small"
+              className="custom-table"
+            />
+          </div>
+        ))}
       </Modal>
     </>
   );

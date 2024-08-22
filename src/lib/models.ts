@@ -78,6 +78,7 @@ export class WorkingHourRecord {
   checkIn: string;
   checkOut: string;
   workHour: number;
+  createdAt: string;
 
   constructor(data: {
     project_name: string;
@@ -87,6 +88,7 @@ export class WorkingHourRecord {
     check_in: string;
     check_out: string;
     work_hour: number;
+    created_at: string;
   }) {
     this.projectName = data.project_name;
     this.deliverable = data.deliverable;
@@ -95,5 +97,6 @@ export class WorkingHourRecord {
     this.checkIn = data.check_in;
     this.checkOut = data.check_out;
     this.workHour = data.work_hour;
+    this.createdAt = data.created_at;
   }
 }

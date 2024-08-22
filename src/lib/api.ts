@@ -129,7 +129,7 @@ export const getWorkingHourRecords = (
       .then((response) => {
         const records: WorkingHourRecord[] = [];
         response.data.forEach((item: any) => {
-          records.push(item);
+          records.push(new WorkingHourRecord(item));
         });
         resolve(records);
       })
