@@ -81,10 +81,12 @@ export function Recorder(props: {
               style={{
                 color: "#FFFFFF",
                 margin: 0,
-                marginLeft: "20px",
-                marginRight: "20px",
+                marginLeft: "40px",
+                marginRight: "40px",
                 marginTop: "10px",
                 marginBottom: "10px",
+                whiteSpace: "normal",
+                wordBreak: "break-word",
               }}
             >
               {props.cardType === "Project" &&
