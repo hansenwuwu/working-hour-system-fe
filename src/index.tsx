@@ -5,16 +5,13 @@ import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import TimeCard from "./routes/TimeCard";
 import CardGenerator from "./routes/CardGenerator/CardGenerator";
+import Redirect from "./routes/Redirect";
 
 const router = createBrowserRouter(
   [
     {
       path: "/",
-      element: <TimeCard />,
-    },
-    {
-      path: "/cg",
-      element: <CardGenerator />,
+      element: <Redirect />,
     },
   ],
   { basename: "/working-hour-system-fe" }
